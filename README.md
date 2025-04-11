@@ -3,7 +3,7 @@ Declarative Shadow DOM Definition element - Proposal and Demo
 
 ## Proposal
 
-The intent of this repository is to propose and describe an interface for defining web-components using Declarative Shadow DOM as a main building block.
+The intent of this repository is to propose and describe an interface for defining web-components declaratively (aka DCE) using Declarative Shadow DOM as a main building block.
 
 It is based on (but very different from) the work done in [Tram-Deco](https://github.com/Tram-One/tram-deco) and intends to be interoperable with (but is not dependent on) the propsal described in [inert-html-import](https://github.com/JRJurman/inert-html-import).
 
@@ -59,7 +59,7 @@ A basic example that needs no javascript:
 </web-citation>
 ```
 
-See a live example here: <a href="jrjurman.com/define-dsd-element/example/basic.html">example/basic.html</a>
+See a live example here: <a href="https://jrjurman.com/define-dsd-element/example/basic.html">example/basic.html</a>
 
 If we wanted to enhance this with javascript, we could create the following class first, and then use the `extends` property on the definition element:
 
@@ -76,9 +76,48 @@ class CopyableElement extends HTMLElement {
 customElements.define('copyable-element', CopyableElement)
 </script>
 
-<define element="web-citation" extends="copyable-element">
+<define-element element="web-citation" extends="copyable-element">
   ...
-</define>
+</define-element>
 ```
 
-See a live example here: <a href="jrjurman.com/define-dsd-element/example/extends.html">example/extends.html</a>
+See a live example here: <a href="https://jrjurman.com/define-dsd-element/example/extends.html">example/extends.html</a>
+
+## Motivation
+
+This proposal represents a small implementation cost to enabling Declarative Custom Elements, that makes use of the existing Declarative Shadow DOM interface. While other proposals for DCE have existed in the past, few use Declarative Shadow DOM, and many emphasize capabilities beyond defining new elements with just HTML. While these other capabilities would be valuable to have in a non-JS setting, this proposal focuses on the "defining new elements" part.
+
+## Open Questions
+
+### Tag-Name for Extends
+
+Ideally we would be able to reference a Class directly, rather than relying on a registered element, however the existing APIs make it relatively simple to do a class name lookup using a string tag name.
+
+If the APIs allow us to pass in a ClassName directly as an attribute, we could imagine that as a more elegant interface, but using a tag-name doesn't feel too in-elegant.
+
+### Custom Element Registries
+
+One clear gap with this implementation is how this would interface with other element registries. We could imagine a new `registry` prop, but that would require passing in a string reference (a similar problem to the `extends` attribute).
+
+One option could also be to use the registry of the element you are extending. For authors that want a totally new registry, they could first register a base element in the registry that they want to populate.
+
+```html
+<script>
+  const myRegistry = new CustomElementRegistry();
+  myRegistry.define('my-registry-base', HTMLElement);
+</script>
+
+<define-element name="web-citation" extends="my-registry-base">
+</define-element>
+```
+
+### Importing Element Definitions
+
+In order for authors to feel comfortable building and sharing custom web components, there should be an easy and obvious way to share element definitions. We could imagine sharing both a script (base element definition) and a template to be used for the declarative shadow DOM.
+
+```html
+<script src="copyable-element.js"></script>
+<define-element name="web-citation" extends="copyable-element">
+  <template shadowrootmode="open" src="web-citation.html">
+</define-element>
+```
