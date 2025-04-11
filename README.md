@@ -94,7 +94,7 @@ We already have attributes supported on Declarative Shadow DOM, like `shadowRoot
 
 ### Shadow Roots are not applied on the `<define>` element
 
-For browsers today, adding a template with shadow root properties will not create a live shadow root. This is good because it means that older browsers will safely ignore these definitions. The template can be inert, while our definition element is live.
+For browsers today (without the `<define>` element), adding a template with shadow root properties will not create a live shadow root. This is good because it means that those templates will remain inert (as document fragments) in both current and new browsers that implement this.
 
 This behavior will continue to exist so long as `<define>` is not added as a valid target for shadow roots (the list for which is actually [strictly defined in the spec](https://dom.spec.whatwg.org/#valid-shadow-host-name)).
 
