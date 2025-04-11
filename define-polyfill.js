@@ -27,6 +27,8 @@ function defineNewElement(definitionElement) {
 	});
 }
 
-document.querySelectorAll('define').forEach((defineElement) => {
-	defineNewElement(defineElement)
-})
+document.addEventListener("DOMContentLoaded", () => {
+	document.querySelectorAll('define').forEach((defineElement) => {
+		defineNewElement(defineElement)
+	});
+});

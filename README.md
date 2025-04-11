@@ -118,8 +118,8 @@ One option could also be to use the registry of the element you are extending. F
   myRegistry.define('my-registry-base', HTMLElement);
 </script>
 
-<define-element name="web-citation" extends="my-registry-base">
-</define-element>
+<define name="web-citation" extends="my-registry-base">
+</define>
 ```
 
 ### Importing Element Definitions
@@ -128,7 +128,7 @@ In order for authors to feel comfortable building and sharing custom web compone
 
 ```html
 <script src="copyable-element.js"></script>
-<define-element name="web-citation" extends="copyable-element">
+<define name="web-citation" extends="copyable-element">
   <template shadowrootmode="open" src="web-citation.html">
-</define-element>
+</define>
 ```
