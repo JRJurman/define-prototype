@@ -13,7 +13,7 @@ customElements.define('copyable-element', CopyableElement)
 <define-element name="web-citation" extends="copyable-element">
   <template shadowrootmode="open">
     <style>
-			:host { display: inline-block; }
+			:host { display: block; }
       #container { display: grid; grid-template-columns: 2em auto; }
       slot[name="published-source"] { font-style: italic; }
     </style>

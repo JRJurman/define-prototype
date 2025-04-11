@@ -36,6 +36,7 @@ A basic example that needs no javascript:
 <define-element name="web-citation">
   <template shadowrootmode="open">
     <style>
+			:host { display: block; }
       #container { display: grid; grid-template-columns: 2em auto; }
       slot[name="published-source"] { font-style: italic; }
     </style>
