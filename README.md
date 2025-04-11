@@ -19,10 +19,13 @@ It is based on the work done in [Tram-Deco](https://github.com/Tram-One/tram-dec
 
 <dl>
   <dt><code>&lt;define&gt;</code></dt>
-  <dd>A new element, which indicates to the browser that an HTML element should be defined to be used elsewhere in the document. It has one parameter, <code>extends</code></dd>
+  <dd>A new element, which indicates to the browser that an HTML element should be defined to be used elsewhere in the document. It has two parameter, <code>element</code> and <code>extends</code>.</dd>
 
+  <dt><code>element</code></dt>
+  <dd>An attribute which describes the tag name used to create instances of this element. This attribute is required and has no default value.</dd>
+  
   <dt><code>extends</code></dt>
-  <dd>A new attribute, which describes what class to base this element definition off of. The default value should be <code>HTMLElement</code>.</dd>
+  <dd>An attribute which describes what class to base this element definition off of. The default value should be <code>HTMLElement</code>.</dd>
 </dl>
 
 ### Example
