@@ -1,28 +1,32 @@
-class DefineElement extends HTMLElement {
-	connectedCallback() {
-		// set the element style to be hidden
-		this.style.display = 'none';
+function defineNewElement(definitionElement) {
+	// get the name for this new element
+	const name = definitionElement.getAttribute('name');
 
-		// pull attributes for element definition
-		const name = this.getAttribute('name');
-		const shadowRoot = this.shadowRoot;
-		const parentTag = this.getAttribute('extends');
-		const parentClass = parentTag ? customElements.get(parentTag) : HTMLElement;
+	// build the shadowRoot off of the template on the definitionElement
+	const shadowRootTemplate = definitionElement.children[0];
+	const shadowRootPlaceholder = document.createElement('template');
+	shadowRootPlaceholder.setHTMLUnsafe(`<div>${shadowRootTemplate.outerHTML}</div>`)
+	const shadowRoot = shadowRootPlaceholder.content.children[0].shadowRoot;
 
-		// define new element
-		customElements.define(name, class extends parentClass {
-			constructor() {
-				super();
-				this.attachShadow(shadowRoot);
+	// determine if we want to extend another class
+	const parentTag = definitionElement.getAttribute('extends');
+	const parentClass = parentTag ? customElements.get(parentTag) : HTMLElement;
 
-				// clone the shadow root content using a document range
-				const shadowRootRange = document.createRange();
-				shadowRootRange.selectNodeContents(shadowRoot);
-				this.shadowRoot.append(shadowRootRange.cloneContents());
-			}
-		});
+	customElements.define(name, class extends parentClass {
+		constructor() {
+			super();
 
-	}
+			// attach the shadow root, with the options used in the created declarative shadow DOM
+			this.attachShadow(shadowRoot);
+
+			// clone the shadow root content using a document range
+			const shadowRootRange = document.createRange();
+			shadowRootRange.selectNodeContents(shadowRoot);
+			this.shadowRoot.append(shadowRootRange.cloneContents());
+		}
+	});
 }
 
-customElements.define('define-element', DefineElement);
+document.querySelectorAll('define').forEach((defineElement) => {
+	defineNewElement(defineElement)
+})

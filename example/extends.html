@@ -10,7 +10,7 @@ class CopyableElement extends HTMLElement {
 customElements.define('copyable-element', CopyableElement)
 </script>
 
-<define-element name="web-citation" extends="copyable-element">
+<define name="web-citation" extends="copyable-element">
   <template shadowrootmode="open">
     <style>
 			:host { display: block; }
@@ -27,7 +27,7 @@ customElements.define('copyable-element', CopyableElement)
       </div>
     </div>
   </template>
-</define-element>
+</define>
 
 <web-citation>
   <span slot="reference-no">1</span>
