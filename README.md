@@ -1,6 +1,9 @@
 # define-dsd-element
 Declarative Shadow DOM Definition element - Proposal and Demo
 
+> [!important]
+> At this point, this repository represents a proposal only. A demo implementation will (hopefully) be coming soon.
+
 ## Proposal
 
 The intent of this repository is to propose and describe an interface for defining web-components using Declarative Shadow DOM as a main building block.
