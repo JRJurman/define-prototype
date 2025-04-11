@@ -1,9 +1,6 @@
 # define-dsd-element
 Declarative Shadow DOM Definition element - Proposal and Demo
 
-> [!important]
-> At this point, this repository represents a proposal only. A demo implementation will (hopefully) be coming soon.
-
 ## Proposal
 
 The intent of this repository is to propose and describe an interface for defining web-components using Declarative Shadow DOM as a main building block.
@@ -13,22 +10,22 @@ It is based on (but very different from) the work done in [Tram-Deco](https://gi
 ### Interface
 
 ```html
-<define element="ELEMENT_NAME" extends="CLASS_NAME">
+<define-element name="ELEMENT_NAME" extends="PARENT_TAG_NAME">
   <template shadowrootmode="SHADOW_ROOT_MODE">
     TEMPLATE_CONTENT
   </template>
-</define>
+</define-element>
 ```
 
 <dl>
-  <dt><code>&lt;define&gt;</code></dt>
-  <dd>A new element, which indicates to the browser that an HTML element should be defined to be used elsewhere in the document. It has two parameter, <code>element</code> and <code>extends</code>.</dd>
+  <dt><code>&lt;define-element&gt;</code></dt>
+  <dd>A new element, which indicates to the browser that an HTML element should be defined to be used elsewhere in the document. It has two parameter, <code>element</code> and <code>extends</code>. For the purposes of the demo, this is a hyphenated web-component.</dd>
 
-  <dt><code>element</code></dt>
+  <dt><code>name</code></dt>
   <dd>An attribute which describes the tag name used to create instances of this element. This attribute is required and has no default value.</dd>
-  
+
   <dt><code>extends</code></dt>
-  <dd>An attribute which describes what class to base this element definition off of. The default value should be <code>HTMLElement</code>.</dd>
+  <dd>An attribute which references another web-component tag to extend off of. When not provided, the newly defined element extends the HTMLElement class.</dd>
 </dl>
 
 ### Example
@@ -36,7 +33,7 @@ It is based on (but very different from) the work done in [Tram-Deco](https://gi
 A basic example that needs no javascript:
 
 ```html
-<define element="web-citation">
+<define-element name="web-citation">
   <template shadowrootmode="open">
     <style>
       #container { display: grid; grid-template-columns: 2em auto; }
@@ -52,7 +49,7 @@ A basic example that needs no javascript:
       </div>
     </div>
   </template>
-</define>
+</define-element>
 
 <web-citation>
   <span slot="reference-no">1</span>
@@ -62,7 +59,9 @@ A basic example that needs no javascript:
 </web-citation>
 ```
 
-If we wanted to enhance this with javascript, we could create the following class first, and then use the `extends` property on the `<define>` element:
+See a live example here: <a href="jrjurman.com/define-dsd-element/example/basic.html">example/basic.html</a>
+
+If we wanted to enhance this with javascript, we could create the following class first, and then use the `extends` property on the definition element:
 
 ```html
 <script>
@@ -73,9 +72,13 @@ class CopyableElement extends HTMLElement {
     })
   }
 }
+
+customElements.define('copyable-element', CopyableElement)
 </script>
 
-<define element="web-citation" extends="CopyableElement">
+<define element="web-citation" extends="copyable-element">
   ...
 </define>
 ```
+
+See a live example here: <a href="jrjurman.com/define-dsd-element/example/extends.html">example/extends.html</a>
