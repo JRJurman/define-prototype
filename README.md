@@ -5,7 +5,7 @@ Declarative Shadow DOM Definition element - Proposal and Demo
 
 The intent of this repository is to propose and describe an interface for defining web-components using Declarative Shadow DOM as a main building block.
 
-It is based on the work done in [Tram-Deco](https://github.com/Tram-One/tram-deco) and intends to be interoperable with the propsal described in [inert-html-import](https://github.com/JRJurman/inert-html-import).
+It is based on (but very different from) the work done in [Tram-Deco](https://github.com/Tram-One/tram-deco) and intends to be interoperable with (but is not dependent on) the propsal described in [inert-html-import](https://github.com/JRJurman/inert-html-import).
 
 ### Interface
 
