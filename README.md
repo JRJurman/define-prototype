@@ -16,17 +16,33 @@ In many ways, this is an implementation and modernization of the proposal descri
 ```html
 <define name="ELEMENT_NAME">
   <template shadowrootmode="SHADOW_ROOT_MODE">
-    TEMPLATE_CONTENT
+    <!-- TEMPLATE_CONTENT -->
   </template>
+  <script type="module">
+    export default class extends HTMLElement {
+      /* property and method definitions */
+    }
+  </script>
 </define>
 ```
 
 <dl>
   <dt><code>&lt;define&gt;</code></dt>
-  <dd>A new element, which indicates to the browser that a new custom element should be defined to be used elsewhere in the document. It has a single parameter, <code>name</code>. The <code>define</code> element should be excluded from the list of elements that can be valid shadow hosts, but is expected to have a child node that is a template with declarative shadow DOM properties (the template content will in this case be put in an inert document fragment).</dd>
+  <dd>
+    A new element, which indicates to the browser that a new custom element should be defined to be used elsewhere in the document.
+
+    It has a single parameter, <code>name</code>. It has a single javascript attribute, <code>elementConstructor</code>.
+
+    The <code>define</code> element can (optionally) have a single <code>template</code> child node and a single <code>script</code> child node. These nodes define the shadow root template and parent class for the new custom element.
+
+    The <code>define</code> element should be excluded from the list of elements that can be valid shadow hosts, (the template content will in this case be put in an inert document fragment).
+  </dd>
 
   <dt><code>name</code></dt>
   <dd>The tag name this new component will be associated with in the custom elements registry. This attribute is required and has no default value.</dd>
+
+  <dt><code>elementConstructor</code></dt>
+  <dd>A reference to the class used when creating instances of this element. This is undefined if the class failed to be created.</dd>
 </dl>
 
 ### Example
@@ -144,6 +160,8 @@ In order for authors to feel comfortable building and sharing custom web compone
   <script type="module" src="web-citation.js"></script>
 </define>
 ```
+
+There is a reality where HTML Modules would slot nicely as an interface for the `<define>` element.
 
 ## Tradeoffs
 

@@ -1,4 +1,9 @@
 async function defineNewElement(definitionElement) {
+	// check if we've already defined this element (if we have, we don't need do anything)
+	if (definitionElement.elementConstructor) {
+		return;
+	}
+
 	// get the name for this new element
 	const name = definitionElement.getAttribute('name');
 
@@ -21,20 +26,33 @@ async function defineNewElement(definitionElement) {
 		parentClass = module.default;
 	}
 
-	customElements.define(name, class extends parentClass {
+	const elementClass = class extends parentClass {
 		constructor() {
 			super();
 
-			// attach the shadow root, with the options used in the created declarative shadow DOM
-			this.attachShadow(shadowRoot);
+			// attach and clone the shadow root from the definition element
+			if (shadowRoot) {
+				// the shadowRoot object has all the properties we want to pass in here
+				this.attachShadow(shadowRoot);
 
-			// clone the shadow root content using a document range
-			const shadowRootRange = document.createRange();
-			shadowRootRange.selectNodeContents(shadowRoot);
-			this.shadowRoot.append(shadowRootRange.cloneContents());
+				// clone the shadow root content using a document range
+				const shadowRootRange = document.createRange();
+				shadowRootRange.selectNodeContents(shadowRoot);
+				this.shadowRoot.append(shadowRootRange.cloneContents());
+			}
+
 		}
-	});
+	}
+
+	customElements.define(name, elementClass);
+	definitionElement.elementConstructor = elementClass;
 }
+
+new MutationObserver((mutationList) => {
+	for (mutation in mutationList) {
+
+	}
+})
 
 document.addEventListener("DOMContentLoaded", () => {
 	document.querySelectorAll('define').forEach((defineElement) => {
