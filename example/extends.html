@@ -16,7 +16,7 @@
     </div>
   </template>
   <script type="module">
-    export default class extends HTMLElement {
+    export default class extends HTMLDeclarativeCustomElement {
       connectedCallback() {
         this.addEventListener('click', () => {
           this.style.backgroundColor = 'yellow'

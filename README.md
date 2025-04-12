@@ -19,7 +19,7 @@ In many ways, this is an implementation and modernization of the proposal descri
     <!-- TEMPLATE_CONTENT -->
   </template>
   <script type="module">
-    export default class extends HTMLElement {
+    export default class extends HTMLDeclarativeCustomElement {
       /* property and method definitions */
     }
   </script>
@@ -47,7 +47,13 @@ In many ways, this is an implementation and modernization of the proposal descri
   </dd>
 
   <dt><code>&lt;script type="module"&gt;</code></dt>
-  <dd>A child <code>script</code> element with a class definition and export. Like the template element, this element is optional, but if it does exist it needs to be of type <code>module</code> and should have a default export of a class that extends HTMLElement. This class will be used as a parent class.</dd>
+  <dd>A child <code>script</code> element with a class definition and export. Like the template element, this element is optional, but if it does exist it needs to be of type <code>module</code> and should have a default export of a class that extends HTMLDeclarativeCustomElement.
+  <br><br>
+  The exported class will be the class of the web component. If one is not provided, then the <code>define</code> element will create a class that extends <code>HTMLDeclarativeCustomElement</code> on the spot and use that for the component definition.
+  </dd>
+
+  <dt><code>HTMLDeclarativeCustomElement</code></dt>
+  <dd><code>HTMLDeclarativeCustomElement</code> is a new class that extends the HTMLElement class and provides the default behavior for declaratively defined web-components. Specifically it has an updated constructor that copies a <code>.shadowRootTemplate<code> from the <code>define</code> element.</dd>
 </dl>
 
 ### Example
@@ -108,7 +114,7 @@ If we wanted to enhance this with javascript, we can include a script inside the
   </template>
 
   <script type="module">
-    export default class extends HTMLElement {
+    export default class extends HTMLDeclarativeCustomElement {
       connectedCallback() {
         this.addEventListener('click', () => {
           this.style.backgroundColor = 'yellow'
@@ -171,6 +177,14 @@ In order for authors to feel comfortable building and sharing custom web compone
 There is a reality where HTML Modules would slot nicely as an interface for the `<define>` element.
 
 ## Tradeoffs
+
+### New HTMLDeclarativeCustomElement class with ShadowRootTemplate
+
+The implementation provided here has the following behavior:
+1. If a script is provided, then we use that class directly. That class needs to extend `HTMLDeclarativeCustomElement` if it wants to have the template populated with the template element in the `<define>` element.
+2. If a script is not provided, then we build a class on-the-spot that extends `HTMLDeclarativeCustomElement`.
+
+In an earlier version of this proposal we **always** created a new class that implemented the behavior of `HTMLDeclarativeCustomElement` (although it was unnamed). This however meant that developers could not override templates in new component definitions, and meant that even when a developer would provide a class, it was always overridden by the on-the-spot class created for the shadow root constructor.
 
 ### Templating API
 

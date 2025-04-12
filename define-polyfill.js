@@ -1,3 +1,22 @@
+class HTMLDeclarativeCustomElement extends HTMLElement {
+	constructor() {
+		super();
+
+		const shadowRoot = this.constructor.prototype.shadowRootTemplate;
+		// attach and clone the shadow root from the definition element
+		if (shadowRoot) {
+			// the shadowRoot object has all the properties we want to pass in here
+			this.attachShadow(shadowRoot);
+
+			// clone the shadow root content using a document range
+			const shadowRootRange = document.createRange();
+			shadowRootRange.selectNodeContents(shadowRoot);
+			this.shadowRoot.append(shadowRootRange.cloneContents());
+		}
+
+	}
+}
+
 async function defineNewElement(definitionElement) {
 	// check if we've already defined this element (if we have, we don't need do anything)
 	if (definitionElement.elementConstructor) {
@@ -7,45 +26,31 @@ async function defineNewElement(definitionElement) {
 	// get the name for this new element
 	const name = definitionElement.getAttribute('name');
 
-	// build the shadowRoot off of the template on the definitionElement
-	let shadowRoot = null;
-	const shadowRootTemplate = definitionElement.querySelector('template');
-	if (shadowRootTemplate) {
-		const shadowRootPlaceholder = document.createElement('template');
-		shadowRootPlaceholder.setHTMLUnsafe(`<div>${shadowRootTemplate.outerHTML}</div>`)
-		shadowRoot = shadowRootPlaceholder.content.children[0].shadowRoot;
-	}
-
-	// check if we have a script, if we do, then there is an exported class we want to use as the parent
-	let parentClass = HTMLElement;
+	// check if we have a script, if we do, then there is an exported class we want to use for this element
+	// if we don't have a script, we'll want to build a class on the spot based on HTMLDeclarativeCustomElement
+	let componentClass = null;
 	const script = definitionElement.querySelector('script');
 	if (script) {
 		const blob = new Blob([script.textContent], { type: 'text/javascript' });
 		const moduleUrl = URL.createObjectURL(blob);
 		const module = await import(moduleUrl);
-		parentClass = module.default;
+		componentClass = module.default;
+	} else {
+		componentClass = class extends HTMLDeclarativeCustomElement {};
 	}
 
-	const elementClass = class extends parentClass {
-		constructor() {
-			super();
-
-			// attach and clone the shadow root from the definition element
-			if (shadowRoot) {
-				// the shadowRoot object has all the properties we want to pass in here
-				this.attachShadow(shadowRoot);
-
-				// clone the shadow root content using a document range
-				const shadowRootRange = document.createRange();
-				shadowRootRange.selectNodeContents(shadowRoot);
-				this.shadowRoot.append(shadowRootRange.cloneContents());
-			}
-
-		}
+	// build the shadowRoot off of the template on the definitionElement
+	const shadowRootTemplate = definitionElement.querySelector('template');
+	if (shadowRootTemplate) {
+		const shadowRootPlaceholder = document.createElement('template');
+		shadowRootPlaceholder.setHTMLUnsafe(`<div>${shadowRootTemplate.outerHTML}</div>`)
+		const shadowRoot = shadowRootPlaceholder.content.children[0].shadowRoot;
+		componentClass.prototype.shadowRootTemplate = shadowRoot;
 	}
 
-	customElements.define(name, elementClass);
-	definitionElement.elementConstructor = elementClass;
+
+	customElements.define(name, componentClass);
+	definitionElement.elementConstructor = componentClass;
 }
 
 const defineElementObserver = new MutationObserver((mutationList) => {
