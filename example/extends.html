@@ -1,5 +1,5 @@
 <script>
-class CopyableElement extends HTMLElement {
+class HighlightElement extends HTMLElement {
 	connectedCallback() {
 		this.addEventListener('click', () => {
 			this.style.backgroundColor = 'yellow'
@@ -7,10 +7,10 @@ class CopyableElement extends HTMLElement {
 	}
 }
 
-customElements.define('copyable-element', CopyableElement)
+customElements.define('highlight-element', HighlightElement)
 </script>
 
-<define name="web-citation" extends="copyable-element">
+<define name="web-citation" extends="highlight-element">
   <template shadowrootmode="open">
     <style>
 			:host { display: block; }

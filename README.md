@@ -1,6 +1,8 @@
 # define-dsd-element
 Declarative Shadow DOM Definition element - Proposal and Demo
 
+This repo contains a polyfill for the interface described below. You can see the source code in `define-polyfill.js`, and the examples in the `/example` folder.
+
 ## Proposal
 
 The intent of this repository is to propose and describe an interface for defining web-components declaratively (aka DCE) using Declarative Shadow DOM as a main building block.
@@ -19,13 +21,13 @@ It is based on (but very different from) the work done in [Tram-Deco](https://gi
 
 <dl>
   <dt><code>&lt;define&gt;</code></dt>
-  <dd>A new element, which indicates to the browser that an HTML element should be defined to be used elsewhere in the document. It has two parameters, <code>name</code> and <code>extends</code>. For the purposes of the demo, this is a hyphenated web-component.</dd>
+  <dd>A new element, which indicates to the browser that a new custom element should be defined to be used elsewhere in the document. It has two parameters, <code>name</code> and <code>extends</code>. It should be excluded from the list of elements that can be valid shadow hosts, but is expected to have a child node that is a template with declarative shadow DOM properties (the template content will in this case be put in a document fragment).</dd>
 
   <dt><code>name</code></dt>
-  <dd>An attribute which describes the tag name used to create instances of this element. This attribute is required and has no default value.</dd>
+  <dd>The tag name this new component will be associated with in the custom elements registry. This attribute is required and has no default value.</dd>
 
   <dt><code>extends</code></dt>
-  <dd>An attribute which references another custom element to extend off of. When not provided, the newly defined element extends the HTMLElement class.</dd>
+  <dd>An attribute which references another custom element to extend off of. When not provided, the newly defined element extends the <code>HTMLElement</code> class.</dd>
 </dl>
 
 ### Example
@@ -66,18 +68,18 @@ If we wanted to enhance this with javascript, we could create the following clas
 
 ```html
 <script>
-class CopyableElement extends HTMLElement {
-  connectedCallback() {
-    this.addEventListener('click', () => {
-      navigator.clipboard.writeText(this.textContent);
-    })
-  }
+class HighlightElement extends HTMLElement {
+	connectedCallback() {
+		this.addEventListener('click', () => {
+			this.style.backgroundColor = 'yellow'
+		})
+	}
 }
 
-customElements.define('copyable-element', CopyableElement)
+customElements.define('highlight-element', HighlightElement)
 </script>
 
-<define element="web-citation" extends="copyable-element">
+<define element="web-citation" extends="highlight-element">
   ...
 </define>
 ```
@@ -86,15 +88,17 @@ See a live example here: <a href="https://jrjurman.com/define-dsd-element/exampl
 
 ## Motivation
 
-This proposal represents a small implementation cost to enabling Declarative Custom Elements, that makes use of the existing Declarative Shadow DOM interface. While other proposals for DCE exist, few use Declarative Shadow DOM, and many emphasize capabilities beyond defining new elements with just HTML. While these other capabilities would be valuable to have in a non-JS setting, this proposal focuses on the "defining new elements" part.
+This proposal represents a small implementation cost to enabling Declarative Custom Elements, that makes use of the existing Declarative Shadow DOM interface. While other proposals for DCE exist, few use Declarative Shadow DOM as a building block, and many emphasize capabilities beyond defining new elements with just HTML. While these other capabilities would be valuable to have in a declarative interface, this proposal focuses on "defining new elements".
+
+## Key Benefits
 
 ### Takes Advantage of Existing DSD Attributes
 
-We already have attributes supported on Declarative Shadow DOM, like `shadowRootMode`, `delegatesFocus`, etc, and plans to add more in most proposals / specs related to web-components. By leveraging templates as a child element to the definition, we can leverage these attributes in a syntax that is already familiar with developers today.
+We already have attributes supported on Declarative Shadow DOM, like `shadowRootMode`, `delegatesFocus`, etc, and plan to add more in most proposals / specs related to web-components. By leveraging DSD templates as a child element to the definition, we can leverage these declarative attributes in a syntax that is already familiar with developers today.
 
-### Shadow Roots are not applied on the `<define>` element
+### Shadow Roots are already inert on the `<define>` element
 
-For browsers today (without the `<define>` element), adding a template with shadow root properties will not create a live shadow root. This is good because it means that those templates will remain inert (as document fragments) in both current and new browsers that implement this.
+For browsers today (without the `<define>` element), adding a template with shadow root properties will not create a live shadow root. This is good because it means that those templates will remain inert (as document fragments) in both old browsers, and new browsers that might implement this proposal.
 
 This behavior will continue to exist so long as `<define>` is not added as a valid target for shadow roots (the list for which is actually [strictly defined in the spec](https://dom.spec.whatwg.org/#valid-shadow-host-name)).
 
@@ -104,7 +108,7 @@ This behavior will continue to exist so long as `<define>` is not added as a val
 
 Ideally we would be able to reference a Class directly, rather than relying on a registered element, however the existing APIs make it relatively simple to do a class name lookup using a string tag name.
 
-If the APIs allow us to pass in a ClassName directly as an attribute, we could imagine that as a more elegant interface, but using a tag-name doesn't feel too in-elegant.
+If the APIs allow us to pass in a ClassName directly as an attribute, we could imagine that as a more straight-forward interface (not necessitating registering an element), but using a tag-name doesn't feel too in-elegant.
 
 ### Custom Element Registries
 
@@ -124,11 +128,10 @@ One option could also be to use the registry of the element you are extending. F
 
 ### Importing Element Definitions
 
-In order for authors to feel comfortable building and sharing custom web components, there should be an easy and obvious way to share element definitions. We could imagine sharing both a script (base element definition) and a template to be used for the declarative shadow DOM.
+In order for authors to feel comfortable building and sharing custom web components, there should be an easy and obvious way to share element definitions. We could imagine a `src` attribute on the template which might load the shadow root content. Conversely, we could also support a `src` attribute on the `<define>` element itself, but what shape that content should be isn't totally clear.
 
 ```html
-<script src="copyable-element.js"></script>
-<define name="web-citation" extends="copyable-element">
+<define name="web-citation">
   <template shadowrootmode="open" src="web-citation.html">
 </define>
 ```
