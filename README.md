@@ -9,6 +9,8 @@ The intent of this repository is to propose and describe an interface for defini
 
 It is based on (but very different from) the work done in [Tram-Deco](https://github.com/Tram-One/tram-deco) and intends to be interoperable with (but is not dependent on) the propsal described in [inert-html-import](https://github.com/JRJurman/inert-html-import).
 
+In many ways, this is an implementation and modernization of the proposal described in <a href="https://github.com/WICG/webcomponents/blob/gh-pages/proposals/Declarative-Custom-Elements-Strawman.md">WICG/webcomponents: Declarative Syntax for Custom Elements</a> (however this implementation does not handle the templating referenced in that proposal).
+
 ### Interface
 
 ```html
@@ -116,13 +118,7 @@ _On chromium browsers this does throw an error in the browser console, but is ot
 
 The script tag with a default export is also safe for browsers today, and doesn't currently cause unintended side-effects or errors today.
 
-###
-
 ## Open Questions
-
-### Templating API
-
-Most developers agree that something missing from Web Components today is a Templating API. Since this interface makes use of the existing Declarative Shadow DOM APIs, that we almost certainly would also want to take advantage of a Templating API, this shouldn't be blocking to those proposals. Any interfaces that we'd want to build for DSD should be able to slot in nicely here.
 
 ### Custom Element Registries
 
@@ -148,3 +144,19 @@ In order for authors to feel comfortable building and sharing custom web compone
   <script type="module" src="web-citation.js"></script>
 </define>
 ```
+
+## Tradeoffs
+
+### Templating API
+
+Most developers agree that something missing from Web Components today is a Templating API. Since this interface makes use of the existing Declarative Shadow DOM APIs, that we almost certainly would also would like to take advantage of a Templating API, this shouldn't be blocking to those proposals. Any interfaces that we'd want to build for DSD should be able to slot in nicely here.
+
+If we decided that Declarative Shadow DOM templates don't need (or shouldn't) have access to these Templating APIs, we should decide and make clear what features DSD should have going forward.
+
+### Reliance on JS Class Definitions
+
+It could be argued that this implementation does too little, and doesn't on its own offer enough to developers. Many other proposals propose features that would allow us to lean less heavily on Javascript for dynamic behavior.
+
+Certainly for security inclined developers, it would be nice to have a totally javascript free interface for complex component behaviors.
+
+The reality however is that the space for those features is not formally defined yet, and may never be defined clearly until we have a platform interface that gives developers a space to explore declarative element creation. Today, every Proof of Concept requires some polyfill or script to enable declarative element definitions, so developers that would be interested in building JS-free components can't even start because the platform does not natively allow a starting place here.
