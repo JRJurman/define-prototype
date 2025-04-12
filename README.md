@@ -19,13 +19,13 @@ It is based on (but very different from) the work done in [Tram-Deco](https://gi
 
 <dl>
   <dt><code>&lt;define&gt;</code></dt>
-  <dd>A new element, which indicates to the browser that an HTML element should be defined to be used elsewhere in the document. It has two parameters, <code>element</code> and <code>extends</code>. For the purposes of the demo, this is a hyphenated web-component.</dd>
+  <dd>A new element, which indicates to the browser that an HTML element should be defined to be used elsewhere in the document. It has two parameters, <code>name</code> and <code>extends</code>. For the purposes of the demo, this is a hyphenated web-component.</dd>
 
   <dt><code>name</code></dt>
   <dd>An attribute which describes the tag name used to create instances of this element. This attribute is required and has no default value.</dd>
 
   <dt><code>extends</code></dt>
-  <dd>An attribute which references another web-component tag to extend off of. When not provided, the newly defined element extends the HTMLElement class.</dd>
+  <dd>An attribute which references another custom element to extend off of. When not provided, the newly defined element extends the HTMLElement class.</dd>
 </dl>
 
 ### Example
