@@ -29,13 +29,13 @@ In many ways, this is an implementation and modernization of the proposal descri
 <dl>
   <dt><code>&lt;define&gt;</code></dt>
   <dd>
-    A new element, which indicates to the browser that a new custom element should be defined to be used elsewhere in the document.
+  A new element, which indicates to the browser that a new custom element should be defined to be used elsewhere in the document.
 
-    It has a single parameter, <code>name</code>. It has a single javascript attribute, <code>elementConstructor</code>.
+  It has a single parameter, <code>name</code>. It has a single javascript attribute, <code>elementConstructor</code>.
 
-    The <code>define</code> element can (optionally) have a single <code>template</code> child node and a single <code>script</code> child node. These nodes define the shadow root template and parent class for the new custom element.
+  The <code>define</code> element can (optionally) have a single <code>template</code> child node and a single <code>script</code> child node. These nodes define the shadow root template and parent class for the new custom element.
 
-    The <code>define</code> element should be excluded from the list of elements that can be valid shadow hosts, (the template content will in this case be put in an inert document fragment).
+  The <code>define</code> element should be excluded from the list of elements that can be valid shadow hosts, (the template content will in this case be put in an inert document fragment).
   </dd>
 
   <dt><code>name</code></dt>
