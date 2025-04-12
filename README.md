@@ -28,21 +28,26 @@ In many ways, this is an implementation and modernization of the proposal descri
 
 <dl>
   <dt><code>&lt;define&gt;</code></dt>
-  <dd>
-  A new element, which indicates to the browser that a new custom element should be defined to be used elsewhere in the document.
-
+  <dd>A new element, which indicates to the browser that a new custom element definition should be created and registered in the custom elements registry to be used for the rest of the document.
+  <br><br>
   It has a single parameter, <code>name</code>. It has a single javascript attribute, <code>elementConstructor</code>.
-
-  The <code>define</code> element can (optionally) have a single <code>template</code> child node and a single <code>script</code> child node. These nodes define the shadow root template and parent class for the new custom element.
-
-  The <code>define</code> element should be excluded from the list of elements that can be valid shadow hosts, (the template content will in this case be put in an inert document fragment).
-  </dd>
+  <br><br>
+  The <code>define</code> element can (optionally) have a single <code>template</code> child node and a single <code>script</code> child node. These nodes define the shadow root template and parent class for the new custom element.</dd>
 
   <dt><code>name</code></dt>
   <dd>The tag name this new component will be associated with in the custom elements registry. This attribute is required and has no default value.</dd>
 
   <dt><code>elementConstructor</code></dt>
   <dd>A reference to the class used when creating instances of this element. This is undefined if the class failed to be created.</dd>
+
+  <dt><code>&lt;template shadowrootmode="SHADOW_ROOT_MODE"&gt;</code></dt>
+  <dd>A child <code>template</code> element with declarative shadow DOM properties. The template itself is optional, but if it does exist it needs a valid <code>shadowRootMode</code>. Any other DSD attributes are also supported, and will be used for the shadow root created in the newly defined web-component.
+  <br><br>
+  The <code>define</code> element should be excluded from the list of elements that can be valid shadow hosts - the template content will in this case be put in an inert document fragment for the <code>define</code> element, but a live shadow root for instances of the newly defined web component.
+  </dd>
+
+  <dt><code>&lt;script type="module"&gt;</code></dt>
+  <dd>A child <code>script</code> element with a class definition and export. Like the template element, this element is optional, but if it does exist it needs to be of type <code>module</code> and should have a default export of a class that extends HTMLElement. This class will be used as a parent class.</dd>
 </dl>
 
 ### Example
