@@ -48,14 +48,21 @@ async function defineNewElement(definitionElement) {
 	definitionElement.elementConstructor = elementClass;
 }
 
-new MutationObserver((mutationList) => {
+const defineElementObserver = new MutationObserver((mutationList) => {
 	for (mutation in mutationList) {
-
+		for (const newNode of mutation?.addedNodes || []) {
+			const previousNode = newNode.previousElementSibling
+			if (previousNode.tagName === 'DEFINE') {
+				defineNewElement(previousNode);
+			}
+		}
 	}
-})
+});
+defineElementObserver.observe(document.documentElement, { childList: true, subtree: true });
 
 document.addEventListener("DOMContentLoaded", () => {
 	document.querySelectorAll('define').forEach((defineElement) => {
 		defineNewElement(defineElement)
 	});
+	defineElementObserver.disconnect()
 });

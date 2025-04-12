@@ -143,7 +143,7 @@ One option could be a named export from the script tag included in the definitio
 
 ```html
 <define name="web-citation">
-  <script>
+  <script type="module">
     const myRegistry = new CustomElementRegistry();
     export { myRegistry as elementRegistry }
   </script>
