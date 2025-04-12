@@ -12,7 +12,7 @@ It is based on (but very different from) the work done in [Tram-Deco](https://gi
 ### Interface
 
 ```html
-<define name="ELEMENT_NAME" extends="PARENT_TAG_NAME">
+<define name="ELEMENT_NAME">
   <template shadowrootmode="SHADOW_ROOT_MODE">
     TEMPLATE_CONTENT
   </template>
@@ -21,18 +21,15 @@ It is based on (but very different from) the work done in [Tram-Deco](https://gi
 
 <dl>
   <dt><code>&lt;define&gt;</code></dt>
-  <dd>A new element, which indicates to the browser that a new custom element should be defined to be used elsewhere in the document. It has two parameters, <code>name</code> and <code>extends</code>. It should be excluded from the list of elements that can be valid shadow hosts, but is expected to have a child node that is a template with declarative shadow DOM properties (the template content will in this case be put in a document fragment).</dd>
+  <dd>A new element, which indicates to the browser that a new custom element should be defined to be used elsewhere in the document. It has a single parameter, <code>name</code>. The <code>define</code> element should be excluded from the list of elements that can be valid shadow hosts, but is expected to have a child node that is a template with declarative shadow DOM properties (the template content will in this case be put in an inert document fragment).</dd>
 
   <dt><code>name</code></dt>
   <dd>The tag name this new component will be associated with in the custom elements registry. This attribute is required and has no default value.</dd>
-
-  <dt><code>extends</code></dt>
-  <dd>An attribute which references another custom element to extend off of. When not provided, the newly defined element extends the <code>HTMLElement</code> class.</dd>
 </dl>
 
 ### Example
 
-A basic example that needs no javascript:
+#### Simple Template Example
 
 ```html
 <define name="web-citation">
@@ -64,23 +61,38 @@ A basic example that needs no javascript:
 
 See a live example here: <a href="https://jrjurman.com/define-dsd-element/example/basic.html">example/basic.html</a>
 
-If we wanted to enhance this with javascript, we could create the following class first, and then use the `extends` property on the definition element:
+#### Javascript Enhanced Example
+
+If we wanted to enhance this with javascript, we can include a script inside the component with an exported class.
 
 ```html
-<script>
-class HighlightElement extends HTMLElement {
-	connectedCallback() {
-		this.addEventListener('click', () => {
-			this.style.backgroundColor = 'yellow'
-		})
-	}
-}
+<define element="web-citation">
+  <template shadowrootmode="open">
+    <style>
+      :host { display: block; }
+      #container { display: grid; grid-template-columns: 2em auto; }
+      slot[name="published-source"] { font-style: italic; }
+    </style>
 
-customElements.define('highlight-element', HighlightElement)
-</script>
+    <div id="container">
+      <div>[<slot name="reference-no"></slot>]</div>
+      <div>
+        <slot name="authors"></slot>,
+        "<slot name="title"></slot>",
+        <slot name="published-source"></slot>
+      </div>
+    </div>
+  </template>
 
-<define element="web-citation" extends="highlight-element">
-  ...
+  <script type="module">
+    export default class extends HTMLElement {
+      connectedCallback() {
+        this.addEventListener('click', () => {
+          this.style.backgroundColor = 'yellow'
+        })
+      }
+    }
+  </script>
 </define>
 ```
 
@@ -96,33 +108,33 @@ This proposal represents a small implementation cost to enabling Declarative Cus
 
 We already have attributes supported on Declarative Shadow DOM, like `shadowRootMode`, `delegatesFocus`, etc, and plan to add more in most proposals / specs related to web-components. By leveraging DSD templates as a child element to the definition, we can leverage these declarative attributes in a syntax that is already familiar with developers today.
 
-### Shadow Roots are already inert on the `<define>` element
+### Interface is safe for browsers today
 
 For browsers today (without the `<define>` element), adding a template with shadow root properties will not create a live shadow root. This is good because it means that those templates will remain inert (as document fragments) in both old browsers, and new browsers that might implement this proposal.
 
-This behavior will continue to exist so long as `<define>` is not added as a valid target for shadow roots (the list for which is actually [strictly defined in the spec](https://dom.spec.whatwg.org/#valid-shadow-host-name)).
+_On chromium browsers this does throw an error in the browser console, but is otherwise safe, and has no user-facing side-effects._
+
+The script tag with a default export is also safe for browsers today, and doesn't currently cause unintended side-effects or errors today.
+
+###
 
 ## Open Questions
 
-### Tag-Name for Extends
+### Templating API
 
-Ideally we would be able to reference a Class directly, rather than relying on a registered element, however the existing APIs make it relatively simple to do a class name lookup using a string tag name.
-
-If the APIs allow us to pass in a ClassName directly as an attribute, we could imagine that as a more straight-forward interface (not necessitating registering an element), but using a tag-name doesn't feel too in-elegant.
+Most developers agree that something missing from Web Components today is a Templating API. Since this interface makes use of the existing Declarative Shadow DOM APIs, that we almost certainly would also want to take advantage of a Templating API, this shouldn't be blocking to those proposals. Any interfaces that we'd want to build for DSD should be able to slot in nicely here.
 
 ### Custom Element Registries
 
-One clear gap with this implementation is how this would interface with other element registries. We could imagine a new `registry` prop, but that would require passing in a string reference (a similar problem to the `extends` attribute).
-
-One option could also be to use the registry of the element you are extending. For authors that want a totally new registry, they could first register a base element in the registry that they want to populate.
+One clear gap with this implementation is how this would interface with other custom element registries.
+One option could be a named export from the script tag included in the definition.
 
 ```html
-<script>
-  const myRegistry = new CustomElementRegistry();
-  myRegistry.define('my-registry-base', HTMLElement);
-</script>
-
-<define name="web-citation" extends="my-registry-base">
+<define name="web-citation">
+  <script>
+    const myRegistry = new CustomElementRegistry();
+    export { myRegistry as elementRegistry }
+  </script>
 </define>
 ```
 
@@ -132,6 +144,7 @@ In order for authors to feel comfortable building and sharing custom web compone
 
 ```html
 <define name="web-citation">
-  <template shadowrootmode="open" src="web-citation.html">
+  <template shadowrootmode="open" src="web-citation.html"></template>
+  <script type="module" src="web-citation.js"></script>
 </define>
 ```

@@ -1,16 +1,4 @@
-<script>
-class HighlightElement extends HTMLElement {
-	connectedCallback() {
-		this.addEventListener('click', () => {
-			this.style.backgroundColor = 'yellow'
-		})
-	}
-}
-
-customElements.define('highlight-element', HighlightElement)
-</script>
-
-<define name="web-citation" extends="highlight-element">
+<define name="web-citation">
   <template shadowrootmode="open">
     <style>
 			:host { display: block; }
@@ -27,6 +15,15 @@ customElements.define('highlight-element', HighlightElement)
       </div>
     </div>
   </template>
+  <script>
+    export default class extends HTMLElement {
+      connectedCallback() {
+        this.addEventListener('click', () => {
+          this.style.backgroundColor = 'yellow'
+        })
+      }
+    }
+    </script>
 </define>
 
 <web-citation>
