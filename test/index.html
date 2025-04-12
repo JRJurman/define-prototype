@@ -1,0 +1,166 @@
+<!-- test file -->
+
+<define name="custom-title">
+	<template shadowrootmode="open">
+		<style>
+			h1 { color: blue; }
+		</style>
+
+		<h1> <slot>Hello World</slot> </h1>
+		<hr />
+	</template>
+	<script type="module">
+		export default class extends HTMLElement {
+			connectedCallback() {
+				this.shadowRoot.querySelector('slot').addEventListener('slotchange', () => {
+					document.title = this.textContent || 'Hello World';
+				});
+			}
+		}
+	</script>
+</define>
+
+<define name="callout-alert">
+	<template shadowrootmode="open">
+		<style>
+			div {
+				display: flex;
+				flex-direction: column;
+				border-left: solid 3px rgb(47, 129, 247);
+				background: rgba(47, 129, 247, 0.1);
+				padding: 0.5em;
+				gap: 0.3em;
+			}
+
+			[name='title'] {
+				font-weight: bold;
+				color: rgb(47, 129, 247);
+			}
+
+			:host([collapsed]) #content {
+				display: none;
+			}
+		</style>
+
+		<div>
+			<span>
+				<slot name="title"></slot>
+				<button id="control">expand</button>
+			</span>
+			<span id="content"><slot></slot></span>
+		</div>
+	</template>
+	<script type="module">
+		export default class extends HTMLElement {
+			static observedAttributes = ['collapsed'];
+			connectedCallback() {
+				const control = this.shadowRoot.getElementById('control');
+				control.addEventListener('click', () => {
+					this.toggleAttribute('collapsed');
+				});
+			}
+			attributeChangedCallback(name, oldValue, newValue) {
+				const control = this.shadowRoot.getElementById('control');
+				if (name === 'collapsed') {
+					control.textContent = this.hasAttribute('collapsed') ? 'expand' : 'collapse';
+				}
+			}
+		}
+	</script>
+</define>
+
+<define name="my-counter">
+	<template shadowrootmode="open" shadowrootdelegatesfocus>
+		<style>
+			button {
+				cursor: pointer;
+				color: blue;
+			}
+		</style>
+		<button><slot>Counter</slot>: <span>0</span></button>
+	</template>
+	<script type="module">
+		export default class extends HTMLElement {
+			static observedAttributes = ['count'];
+			connectedCallback() {
+				const button = this.shadowRoot.querySelector('button');
+				button.addEventListener('click', (event) => {
+					const newCount = parseInt(this.getAttribute('count')) + 1;
+					this.setAttribute('count', newCount);
+				});
+			}
+			attributeChangedCallback(name, oldValue, newValue) {
+				if (name === 'count') {
+					const span = this.shadowRoot.querySelector('span');
+					span.textContent = newValue;
+				}
+			}
+		}
+	</script>
+</define>
+
+<define name="my-copied-counter">
+	<script type="module">
+		const counterElement = document.querySelector('define[name="my-counter"]');
+		const counterClass = counterElement.elementConstructor;
+		export default counterClass;
+	</script>
+</define>
+
+<define name="my-decrementing-counter">
+	<script type="module">
+		const counterElement = document.querySelector('define[name="my-counter"]');
+		const counterClass = counterElement.elementConstructor;
+		export default class extends counterClass {
+			connectedCallback() {
+				const button = this.shadowRoot.querySelector('button');
+				button.addEventListener('click', (event) => {
+					const newCount = parseInt(this.getAttribute('count')) - 1;
+					this.setAttribute('count', newCount);
+				});
+			}
+		};
+	</script>
+</define>
+
+<define name="removable-button">
+	<script type="module">
+		export default class extends HTMLElement {
+			connectedCallback() {
+				this.button = this.shadowRoot.querySelector('button');
+				this.button.addEventListener('click', () => {
+					this.remove();
+				});
+			}
+		}
+	</script>
+</define>
+
+<define name="red-removable-button">
+	<template shadowrootmode="open">
+		<style>
+			button {
+				color: red;
+			}
+		</style>
+		<button>Click Me</button>
+	</template>
+	<script type="module">
+		const removableElement = document.querySelector('define[name="removable-button"]');
+		const removableElementClass = removableElement.elementConstructor;
+		export default removableElementClass;
+	</script>
+</define>
+
+<custom-title>DSD is Cool!</custom-title>
+<my-counter id="a" count="0"></my-counter>
+<my-counter id="b" count="12">Special</my-counter>
+<my-copied-counter id="c" count="15">Copied Counter</my-copied-counter>
+<my-decrementing-counter id="e" count="5">Decrementing Counter</my-decrementing-counter>
+<red-removable-button id="r"></red-removable-button>
+<callout-alert collapsed>
+	<span slot="title">Alert!</span>
+	<span>This content was hidden before you expanded it (hopefully).</span>
+</callout-alert>
+
+<script src="../define-polyfill.js"></script>

@@ -134,6 +134,8 @@ _On chromium browsers this does throw an error in the browser console, but is ot
 
 The script tag with a default export is also safe for browsers today, and doesn't currently cause unintended side-effects or errors today.
 
+_IDEs today may warn on multiple script tags having a default export, however this is incorrect, as module script tags operate independently._
+
 ## Open Questions
 
 ### Custom Element Registries
