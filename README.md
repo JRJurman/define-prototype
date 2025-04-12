@@ -53,7 +53,7 @@ In many ways, this is an implementation and modernization of the proposal descri
   </dd>
 
   <dt><code>HTMLDeclarativeCustomElement</code></dt>
-  <dd><code>HTMLDeclarativeCustomElement</code> is a new class that extends the HTMLElement class and provides the default behavior for declaratively defined web-components. Specifically it has an updated constructor that copies a <code>.shadowRootTemplate<code> from the <code>define</code> element.</dd>
+  <dd><code>HTMLDeclarativeCustomElement</code> is a new class that extends the HTMLElement class and provides the default behavior for declaratively defined web-components. Specifically it has an updated constructor that copies a <code>.shadowRootTemplate</code> from the <code>define</code> element.</dd>
 </dl>
 
 ### Example
