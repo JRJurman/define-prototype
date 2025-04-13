@@ -32,7 +32,7 @@ In many ways, this is an implementation and modernization of the proposal descri
   <br><br>
   It has a single parameter, <code>name</code>. It has a single javascript attribute, <code>elementConstructor</code>.
   <br><br>
-  The <code>define</code> element can (optionally) have a single <code>template</code> child node and a single <code>script</code> child node. These nodes define the shadow root template and parent class for the new custom element.</dd>
+  The <code>define</code> element can (optionally) have a single <code>template</code> child node and a single <code>script</code> child node. These nodes define the shadow root template and the class for the new custom element definition.</dd>
 
   <dt><code>name</code></dt>
   <dd>The tag name this new component will be associated with in the custom elements registry. This attribute is required and has no default value.</dd>
