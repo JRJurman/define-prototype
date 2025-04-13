@@ -95,7 +95,7 @@ See a live example here: <a href="https://jrjurman.com/define-polyfill/example/b
 If we wanted to enhance this with javascript, we can include a script inside the component with an exported class.
 
 ```html
-<define element="web-citation">
+<define name="web-citation">
   <template shadowrootmode="open">
     <style>
       :host { display: block; }
