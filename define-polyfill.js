@@ -54,7 +54,7 @@ async function defineNewElement(definitionElement) {
 }
 
 const defineElementObserver = new MutationObserver((mutationList) => {
-	for (mutation in mutationList) {
+	for (const mutation in mutationList) {
 		for (const newNode of mutation?.addedNodes || []) {
 			const previousNode = newNode.previousElementSibling
 			if (previousNode.tagName === 'DEFINE') {
