@@ -1,4 +1,4 @@
-# define-dsd-element
+# define-polyfill
 Declarative Shadow DOM Definition element - Proposal and Demo
 
 This repo contains a polyfill for the interface described below. You can see the source code in `define-polyfill.js`, and the examples in the `/example` folder.
@@ -88,7 +88,7 @@ In many ways, this is an implementation and modernization of the proposal descri
 </web-citation>
 ```
 
-See a live example here: <a href="https://jrjurman.com/define-dsd-element/example/basic.html">example/basic.html</a>
+See a live example here: <a href="https://jrjurman.com/define-polyfill/example/basic.html">example/basic.html</a>
 
 #### Javascript Enhanced Example
 
@@ -125,7 +125,7 @@ If we wanted to enhance this with javascript, we can include a script inside the
 </define>
 ```
 
-See a live example here: <a href="https://jrjurman.com/define-dsd-element/example/extends.html">example/extends.html</a>
+See a live example here: <a href="https://jrjurman.com/define-polyfill/example/extends.html">example/extends.html</a>
 
 ## Motivation
 
