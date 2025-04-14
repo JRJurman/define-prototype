@@ -9,10 +9,10 @@ If you'd like to play with the prototype in an interactive environment, you can 
 [this codepen template](https://codepen.io/pen?template=XJJrbjM).
 
 > [!warning]
-> This prototype has been developed for demonstrational purposes only. This will almost certainly break in
-> the future as standards develop and we formalize around a spec. That being said, feedback on the interface and
-> ergonomics are appreciated, so please reach out or post Issues against this repo if there are suggestions / feedback /
-> questions.
+>
+> This prototype has been developed for demonstrational purposes only. This will almost certainly break in the future as
+> standards develop and we formalize around a spec. That being said, feedback on the interface and ergonomics are
+> appreciated, so please reach out or post Issues against this repo if there are suggestions / feedback / questions.
 
 ## Proposal
 
