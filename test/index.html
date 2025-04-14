@@ -2,10 +2,12 @@
 <define name="custom-title">
 	<template shadowrootmode="open">
 		<style>
-			h1 { color: blue; }
+			h1 {
+				color: blue;
+			}
 		</style>
 
-		<h1> <slot>Hello World</slot> </h1>
+		<h1><slot>Hello World</slot></h1>
 		<hr />
 	</template>
 	<script type="module">
@@ -68,7 +70,7 @@
 	</script>
 </define>
 
-<define name="my-counter">
+<define name="my-counter" id="myCounter">
 	<template shadowrootmode="open" shadowrootdelegatesfocus>
 		<style>
 			button {
@@ -100,9 +102,7 @@
 
 <define name="my-copied-counter">
 	<script type="module">
-		const counterElement = document.querySelector('define[name="my-counter"]');
-		const counterClass = counterElement.elementConstructor;
-		export default class extends counterClass {};
+		export default class extends myCounter.elementConstructor {}
 	</script>
 </define>
 
@@ -117,17 +117,13 @@
 		<button>TOTAL CLICKS - <span>0</span></button>
 	</template>
 	<script type="module">
-		const counterElement = document.querySelector('define[name="my-counter"]');
-		const counterClass = counterElement.elementConstructor;
-		export default class extends counterClass {};
+		export default class extends myCounter.elementConstructor {}
 	</script>
 </define>
 
 <define name="my-decrementing-counter">
 	<script type="module">
-		const counterElement = document.querySelector('define[name="my-counter"]');
-		const counterClass = counterElement.elementConstructor;
-		export default class extends counterClass {
+		export default class extends myCounter.elementConstructor {
 			connectedCallback() {
 				const button = this.shadowRoot.querySelector('button');
 				button.addEventListener('click', (event) => {
@@ -135,11 +131,11 @@
 					this.setAttribute('count', newCount);
 				});
 			}
-		};
+		}
 	</script>
 </define>
 
-<define name="removable-button">
+<define name="removable-button" id="removableButton">
 	<script type="module">
 		export default class extends HTMLDeclarativeCustomElement {
 			connectedCallback() {
@@ -162,9 +158,7 @@
 		<button>Click Me</button>
 	</template>
 	<script type="module">
-		const removableElement = document.querySelector('define[name="removable-button"]');
-		const removableElementClass = removableElement.elementConstructor;
-		export default class extends removableElementClass {};
+		export default class extends removableButton.elementConstructor {}
 	</script>
 </define>
 
