@@ -8,8 +8,7 @@ This repo contains a prototype implementation for the interface described below.
 If you'd like to play with the prototype in an interactive environment, you can copy the script directly, or use
 [this codepen template](https://codepen.io/pen?template=XJJrbjM).
 
-> [!warning]
-> This prototype has been developed for demonstrational purposes only. This will almost certainly break in
+> [!warning] This prototype has been developed for demonstrational purposes only. This will almost certainly break in
 > the future as standards develop and we formalize around a spec. That being said, feedback on the interface and
 > ergonomics are appreciated, so please reach out or post Issues against this repo if there are suggestions / feedback /
 > questions.
@@ -261,6 +260,33 @@ _IDEs today may warn on multiple script tags having a default export, however th
 operate independently._
 
 ## Open Questions & Tradeoffs
+
+### Using a `shadowrootmode` on an element that we don't intend to make a shadow root template for
+
+Today when a template with a `shadowrootmode` attribute is a child of a non-valid element, some browsers throw errors /
+warnings. While this "works" today, it could be an unexpected behavior for developers that a template doesn't attach a
+shadow root, especially if the spec would suggest it!
+
+Instead of abusing the error-case here, we could instead introduce a new attribute to indicate that this template should
+be used for a component's shadow root (but not _this_ element's shadow root). We could still accept the other DSD
+attributes as they are written today.
+
+```html
+<define name="web-citation">
+  <template shadowrootdefinition="open" shadowrootdelegatesfocus> ... </template>
+</define>
+```
+
+Of course, if we wanted to remove any ambiguity, we could create a new element that stores the DSD properties (now and
+going forward). That would probably need to be adjacent to the template, which would still be responsible for creating
+an inert document fragment.
+
+```html
+<define name="web-citation">
+  <shadowrootproperties shadowrootmode="open" shadowrootdelegatesfocus>
+  <template> ... </template>
+</define>
+```
 
 ### New `HTMLDeclarativeCustomElement` class with `.shadowRootTemplate`
 
