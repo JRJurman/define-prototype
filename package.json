@@ -1,36 +1,36 @@
 {
-  "name": "define-dce-polyfill",
-  "version": "1.0.0",
-  "description": "Polyfill for DCE Definition Elements",
-  "main": "define-polyfill.js",
-  "scripts": {
-    "test": "playwright test --ui -c test/playwright.config.js",
+	"name": "define-dce-polyfill",
+	"version": "1.0.0",
+	"description": "Polyfill for DCE Definition Elements",
+	"main": "define-polyfill.js",
+	"scripts": {
+		"test": "playwright test --ui -c test/playwright.config.js",
 		"test:ci": "playwright test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JRJurman/define-polyfill.git"
-  },
-  "keywords": [
-    "web-component",
-    "html",
-    "declarative",
-    "dce",
-    "custom elements"
-  ],
-  "author": {
-    "name": "Jesse Jurman",
-    "email": "j.r.jurman@gmail.com",
-    "url": "https://jrjurman.com"
-  },
-  "license": "CC0-1.0",
-  "bugs": {
-    "url": "https://github.com/JRJurman/define-polyfill/issues"
-  },
-  "homepage": "https://github.com/JRJurman/define-polyfill#readme",
-  "devDependencies": {
-    "@playwright/test": "^1.51.1",
-    "@types/node": "^22.14.1",
-    "playwright-webkit": "^1.51.1"
-  }
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/JRJurman/define-polyfill.git"
+	},
+	"keywords": [
+		"web-component",
+		"html",
+		"declarative",
+		"dce",
+		"custom elements"
+	],
+	"author": {
+		"name": "Jesse Jurman",
+		"email": "j.r.jurman@gmail.com",
+		"url": "https://jrjurman.com"
+	},
+	"license": "CC0-1.0",
+	"bugs": {
+		"url": "https://github.com/JRJurman/define-polyfill/issues"
+	},
+	"homepage": "https://github.com/JRJurman/define-polyfill#readme",
+	"devDependencies": {
+		"@playwright/test": "^1.51.1",
+		"@types/node": "^22.14.1",
+		"playwright-webkit": "^1.51.1"
+	}
 }

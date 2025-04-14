@@ -13,7 +13,6 @@ class HTMLDeclarativeCustomElement extends HTMLElement {
 			shadowRootRange.selectNodeContents(shadowRoot);
 			this.shadowRoot.append(shadowRootRange.cloneContents());
 		}
-
 	}
 }
 
@@ -43,11 +42,10 @@ async function defineNewElement(definitionElement) {
 	const shadowRootTemplate = definitionElement.querySelector('template');
 	if (shadowRootTemplate) {
 		const shadowRootPlaceholder = document.createElement('template');
-		shadowRootPlaceholder.setHTMLUnsafe(`<div>${shadowRootTemplate.outerHTML}</div>`)
+		shadowRootPlaceholder.setHTMLUnsafe(`<div>${shadowRootTemplate.outerHTML}</div>`);
 		const shadowRoot = shadowRootPlaceholder.content.children[0].shadowRoot;
 		componentClass.prototype.shadowRootTemplate = shadowRoot;
 	}
-
 
 	customElements.define(name, componentClass);
 	definitionElement.elementConstructor = componentClass;
@@ -56,7 +54,7 @@ async function defineNewElement(definitionElement) {
 const defineElementObserver = new MutationObserver((mutationList) => {
 	for (const mutation in mutationList) {
 		for (const newNode of mutation?.addedNodes || []) {
-			const previousNode = newNode.previousElementSibling
+			const previousNode = newNode.previousElementSibling;
 			if (previousNode.tagName === 'DEFINE') {
 				defineNewElement(previousNode);
 			}
@@ -65,9 +63,9 @@ const defineElementObserver = new MutationObserver((mutationList) => {
 });
 defineElementObserver.observe(document.documentElement, { childList: true, subtree: true });
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
 	document.querySelectorAll('define').forEach((defineElement) => {
-		defineNewElement(defineElement)
+		defineNewElement(defineElement);
 	});
-	defineElementObserver.disconnect()
+	defineElementObserver.disconnect();
 });
