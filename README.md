@@ -1,9 +1,9 @@
-# define-polyfill
+# define-prototype
 
 Declarative Shadow DOM Definition element - Proposal and Demo
 
-This repo contains a polyfill for the interface described below. You can see the source code in `define-polyfill.js`,
-and the examples in the `/example` folder.
+This repo contains a prototype implementation for the interface described below. You can see the source code in
+`define-prototype.js`, and the examples in the `/example` and `/test` folders.
 
 ## Proposal
 
@@ -101,7 +101,7 @@ that proposal).
 </web-citation>
 ```
 
-See a live example here: <a href="https://jrjurman.com/define-polyfill/example/basic.html">example/basic.html</a>
+See a live example here: <a href="https://jrjurman.com/define-prototype/example/basic.html">example/basic.html</a>
 
 #### Adding Complex Behavior with JS
 
@@ -144,7 +144,7 @@ If we wanted to enhance this with javascript, we can include a script inside the
 </define>
 ```
 
-See a live example here: <a href="https://jrjurman.com/define-polyfill/example/extends.html">example/extends.html</a>
+See a live example here: <a href="https://jrjurman.com/define-prototype/example/extends.html">example/extends.html</a>
 
 #### Overriding Templates and Script Behavior
 
@@ -219,7 +219,7 @@ Conversely, you could supply just new behavior, and inherit the template from th
 ```
 
 You can see all the above examples live here:
-<a href="https://jrjurman.com/define-polyfill/example/overrides.html">example/overrides.html</a>
+<a href="https://jrjurman.com/define-prototype/example/overrides.html">example/overrides.html</a>
 
 ## Motivation
 
@@ -306,7 +306,7 @@ could be a named export from the script tag included in the definition.
 
 ### Support for Light DOM children
 
-Many DCE implementations offer an ability to define non-shadow-root DOM (light DOM). For the purposes of this polyfill,
+Many DCE implementations offer an ability to define non-shadow-root DOM (light DOM). For the purposes of this prototype,
 that is deemed out of scope, since the Web Components API does not natively expose a way to define light DOM children.
 
 If we wanted to consider cloning children elements into the light DOM, we could imagine the exclusion of a

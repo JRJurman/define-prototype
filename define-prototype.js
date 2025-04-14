@@ -1,4 +1,4 @@
-// polyfill for <define>
+// prototype for HTMLDefineElement
 
 async function defineNewElement(definitionElement) {
 	// check if we've already defined this element (if we have, we don't need do anything)

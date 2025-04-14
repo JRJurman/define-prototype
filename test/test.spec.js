@@ -6,7 +6,7 @@ const getTextContent = async (element) => {
 	return await element.evaluate((el) => el.textContent);
 };
 
-test.describe('Define-Polyfill Tests', () => {
+test.describe('Define-Prototype Tests', () => {
 	test('should validate a range of components', async ({ page }) => {
 		// Construct the absolute file path and use the file:// protocol
 		const filePath = path.resolve(__dirname, '../test/index.html');

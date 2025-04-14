@@ -1,15 +1,16 @@
 {
-	"name": "define-dce-polyfill",
-	"version": "1.0.0",
-	"description": "Polyfill for DCE Definition Elements",
-	"main": "define-polyfill.js",
+	"name": "define-prototype",
+	"private": true,
+	"version": "0.1.0",
+	"description": "Proposal for HTMLDefineElement",
+	"main": "define-prototype.js",
 	"scripts": {
 		"test": "playwright test --ui -c test/playwright.config.js",
 		"test:ci": "playwright test"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/JRJurman/define-polyfill.git"
+		"url": "git+https://github.com/JRJurman/define-prototype.git"
 	},
 	"keywords": [
 		"web-component",
@@ -25,9 +26,9 @@
 	},
 	"license": "CC0-1.0",
 	"bugs": {
-		"url": "https://github.com/JRJurman/define-polyfill/issues"
+		"url": "https://github.com/JRJurman/define-prototype/issues"
 	},
-	"homepage": "https://github.com/JRJurman/define-polyfill#readme",
+	"homepage": "https://github.com/JRJurman/define-prototype#readme",
 	"devDependencies": {
 		"@playwright/test": "^1.51.1",
 		"@types/node": "^22.14.1",
