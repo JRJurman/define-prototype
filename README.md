@@ -27,44 +27,43 @@ that proposal).
     <!-- TEMPLATE_CONTENT -->
   </template>
   <script type="module">
-    export default class extends HTMLDeclarativeCustomElement {
+    export default class extends HTMLElement {
       /* property and method definitions */
     }
   </script>
 </define>
 ```
 
+#### HTMLDefineElement
+
 <dl>
-  <dt><code>&lt;define&gt;</code></dt>
-  <dd>A new element, which indicates to the browser that a new custom element definition should be created and registered in the custom elements registry to be used for the rest of the document.
-  <br><br>
-  It has a single parameter, <code>name</code>. It has a single javascript attribute, <code>elementConstructor</code>.
-  <br><br>
-  The <code>define</code> element can (optionally) have a single <code>template</code> child node and a single <code>script</code> child node. These nodes define the shadow root template and the class for the new custom element definition.</dd>
+  <dt><code>HTMLDefineElement</code></dt>
+  <dd>A new element, which indicates to the browser that a new custom element definition should be created and registered in the custom elements registry to be used for the rest of the document.</dd>
 
   <dt><code>name</code></dt>
-  <dd>The tag name this new component will be associated with in the custom elements registry. This attribute is required and has no default value.</dd>
+  <dd>An attribute that will be the tag name associated with the web component in the custom elements registry. This attribute is required and has no default value.</dd>
 
   <dt><code>elementConstructor</code></dt>
-  <dd>A reference to the class used when creating instances of this element. This is undefined if the class failed to be created.</dd>
+  <dd>An instance property that returns the class created for the newly defined web component. This is undefined if the class failed to be created.</dd>
+</dl>
 
+`HTMLDefineElement` can be the parent node of (up to one) `HTMLTemplateElement` and (up to one) `HTMLScriptElement`.
+
+<dl>
   <dt><code>&lt;template shadowrootmode="SHADOW_ROOT_MODE"&gt;</code></dt>
-  <dd>A child <code>template</code> element with declarative shadow DOM properties. The template itself is optional, but if it does exist it needs a valid <code>shadowRootMode</code>. Any other DSD attributes are also supported, and will be used for the shadow root created in the newly defined web-component.
+  <dd>A child <code>HTMLTemplateElement</code> with declarative shadow DOM properties. The template itself is optional, but if it does exist it needs a valid <code>shadowRootMode</code>. Any other DSD attributes are also supported, and will be used for the shadow root created in the newly defined web-component.
   <br><br>
-  The <code>define</code> element should be excluded from the list of elements that can be valid shadow hosts - the template content will in this case be put in an inert document fragment for the <code>define</code> element, but a live shadow root for instances of the newly defined web component.
+  The <code>HTMLDefineElement</code> should be excluded from the list of elements that can be valid shadow hosts - the template content will in this case be put in an inert document fragment for the <code>HTMLDefineElement</code>, but a live shadow root for instances of the newly defined web component.
   </dd>
 
   <dt><code>&lt;script type="module"&gt;</code></dt>
-  <dd>A child <code>script</code> element with a class definition and export. Like the template element, this element is optional, but if it does exist it needs to be of type <code>module</code> and should have a default export of a class that extends HTMLDeclarativeCustomElement.
+  <dd>A child <code>HTMLScriptElement</code> with an exported class definition. Like the template element, this element is optional, but if it does exist it needs to be of type <code>module</code> and should have a default export of a class that extends <code>HTMLElement</code>.
   <br><br>
-  The exported class will be the class of the web component. If one is not provided, then the <code>define</code> element will create a class that extends <code>HTMLDeclarativeCustomElement</code> on the spot and use that for the component definition.
+  The exported class will be the parent class of the created web component class. If one is not provided, then the <code>HTMLDefineElement</code> will create a class that extends <code>HTMLElement</code> on the spot and use that for the component definition.
   </dd>
-
-  <dt><code>HTMLDeclarativeCustomElement</code></dt>
-  <dd><code>HTMLDeclarativeCustomElement</code> is a new class that extends the HTMLElement class and provides the default behavior for declaratively defined web-components. Specifically it has an updated constructor that copies a <code>.shadowRootTemplate</code> from the <code>define</code> element.</dd>
 </dl>
 
-### Example
+### Examples
 
 #### Simple Template Example
 
@@ -104,7 +103,7 @@ that proposal).
 
 See a live example here: <a href="https://jrjurman.com/define-polyfill/example/basic.html">example/basic.html</a>
 
-#### Javascript Enhanced Example
+#### Adding Complex Behavior with JS
 
 If we wanted to enhance this with javascript, we can include a script inside the component with an exported class.
 
@@ -134,7 +133,7 @@ If we wanted to enhance this with javascript, we can include a script inside the
   </template>
 
   <script type="module">
-    export default class extends HTMLDeclarativeCustomElement {
+    export default class extends HTMLElement {
       connectedCallback() {
         this.addEventListener('click', () => {
           this.style.backgroundColor = 'yellow';
@@ -146,6 +145,81 @@ If we wanted to enhance this with javascript, we can include a script inside the
 ```
 
 See a live example here: <a href="https://jrjurman.com/define-polyfill/example/extends.html">example/extends.html</a>
+
+#### Overriding Templates and Script Behavior
+
+If we wanted to override the template or functionality of a previously declaratively defined component, we can do that
+by defining a new component that references the constructed class (using `.elementConstructor`), and providing either
+just a new template, or overriding the class functions.
+
+Take this base class as an example:
+
+```html
+<define name="my-title" id="myTitleComponent">
+  <template shadowrootmode="open">
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <span>Title: <slot></slot></span>
+  </template>
+  <script>
+    export default class extends HTMLElement {
+      connectedCallback() {
+        this.addEventListener('click', () => {
+          this.style.fontWeight = 'bold';
+        });
+      }
+    }
+  </script>
+</define>
+
+<my-title>My First Web Component</my-title>
+```
+
+You could override just the styles (but keep the click event behavior) by supplying a new template, and exporting the
+same constructor as the parent class.
+
+```html
+<define name="underlined-title">
+  <template shadowrootmode="open">
+    <style>
+      :host {
+        display: block;
+        text-decoration: underline;
+      }
+    </style>
+    <span>Title: <slot></slot></span>
+  </template>
+  <script>
+    export default myTitleComponent.elementConstructor;
+  </script>
+</define>
+
+<underlined-title>Overriding Styles</underlined-title>
+```
+
+Conversely, you could supply just new behavior, and inherit the template from the original component
+
+```html
+<define name="strikable-title">
+  <script>
+    export default class extends myTitleComponent.elementConstructor {
+      connectedCallback() {
+        this.addEventListener('click', () => {
+          this.style.textDecoration = 'line-through';
+        });
+      }
+    }
+  </script>
+</define>
+
+<strikable-title>Overriding Behavior</strikable-title>
+```
+
+You can see all the above examples live here:
+<a href="https://jrjurman.com/define-polyfill/example/overrides.html">example/overrides.html</a>
 
 ## Motivation
 
@@ -179,18 +253,21 @@ operate independently._
 
 ## Open Questions & Tradeoffs
 
-### New HTMLDeclarativeCustomElement class with ShadowRootTemplate
+### New `HTMLDeclarativeCustomElement` class with `.shadowRootTemplate`
 
-The implementation provided here has the following behavior:
+The proposal above always creates a new class that has a `.shadowRootTemplate` property, and attaches and clones it to
+instances of the component (in the constructor method). While technically not required, it may be valuable to have a
+dedicated class (`HTMLDeclarativeCustomElement`) that developers could adopt or extend for their own DCE
+implementations.
 
-1. If a script is provided, then we use that class directly. That class needs to extend `HTMLDeclarativeCustomElement`
-   if it wants to have the template populated with the template element in the `<define>` element.
-2. If a script is not provided, then we build a class on-the-spot that extends `HTMLDeclarativeCustomElement`.
+In the examples above we extend `HTMLElement`, but we could imagine an interface where developers to extend this new
+class instead. However, the ergonomics of using a new base class would almost certainly be inelegant for new developers.
 
-In an earlier version of this proposal we **always** created a new class that implemented the behavior of
-`HTMLDeclarativeCustomElement` (although it was unnamed). This however meant that developers could not override
-templates in new component definitions, and meant that even when a developer would provide a class, it was always
-overridden by the on-the-spot class created for the shadow root constructor.
+A dedicated class was actually part of older version of this proposal, however making parent-child relationship of
+component classes proved to be challenging to reason around.
+
+If we wanted to avoid making classes on the spot, or overriding the component author's class, we'd almost certainly need
+to expose a dedicated class for them to extend.
 
 ### Support for extending components declaratively
 
@@ -249,7 +326,7 @@ being connected.
 </my-logo>
 ```
 
-### Importing Element Definitions
+### External HTML Resources
 
 In order for authors to feel comfortable building and sharing custom web components, there should be an easy and obvious
 way to share element definitions. We could imagine a `src` attribute on the template which might load the shadow root

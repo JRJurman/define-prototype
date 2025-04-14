@@ -1,0 +1,54 @@
+<define name="my-title" id="myTitleComponent">
+	<template shadowrootmode="open">
+		<style>
+			:host {
+				display: block;
+			}
+		</style>
+		<span>Title: <slot></slot></span>
+	</template>
+	<script>
+		export default class extends HTMLElement {
+			connectedCallback() {
+				this.addEventListener('click', () => {
+					this.style.fontWeight = 'bold';
+				});
+			}
+		}
+	</script>
+</define>
+
+<my-title>My First Web Component</my-title>
+
+<define name="underlined-title">
+	<template shadowrootmode="open">
+		<style>
+			:host {
+				display: block;
+				text-decoration: underline;
+			}
+		</style>
+		<span>Title: <slot></slot></span>
+	</template>
+	<script>
+		export default myTitleComponent.elementConstructor;
+	</script>
+</define>
+
+<underlined-title>Overriding Styles</underlined-title>
+
+<define name="strikable-title">
+	<script>
+		export default class extends myTitleComponent.elementConstructor {
+			connectedCallback() {
+				this.addEventListener('click', () => {
+					this.style.textDecoration = 'line-through';
+				});
+			}
+		}
+	</script>
+</define>
+
+<strikable-title>Overriding Behavior</strikable-title>
+
+<script src="../define-polyfill.js"></script>
