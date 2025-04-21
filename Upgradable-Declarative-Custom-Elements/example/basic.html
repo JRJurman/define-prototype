@@ -1,10 +1,13 @@
 <script src="../upgradable.js"></script>
 
-<proto-definition>
-	<template tagname="highlightable-title" shadowrootmode="open">
-		<h1>Hello <slot></slot></h1>
-	</template>
-</proto-definition>
+<template tagname="highlightable-title" shadowrootmode="open">
+	<style>
+		:host {
+			display: block;
+		}
+	</style>
+	<h1>Hello <slot></slot></h1>
+</template>
 
 <highlightable-title>World</highlightable-title>
 
@@ -13,7 +16,9 @@
 		'highlightable-title',
 		class {
 			connectedCallback() {
-				this.style.color = 'blue';
+				this.shadowRoot.querySelector('h1').addEventListener('click', () => {
+					this.style.background = 'yellow';
+				});
 			}
 		}
 	);

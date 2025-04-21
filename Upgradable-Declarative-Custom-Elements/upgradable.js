@@ -41,14 +41,12 @@ class HTMLDefinitionElement extends HTMLElement {
 }
 customElements.define('proto-definition', HTMLDefinitionElement);
 
-async function defineNewElement(definitionElement) {
+async function defineNewElement(shadowRootTemplate) {
 	// get the name for this new element
-	const name = definitionElement.getAttribute('tagname');
+	const name = shadowRootTemplate.getAttribute('tagname');
 
 	const componentClass = class extends HTMLDeclarativeElement {};
 
-	// build the shadowRoot off of the template
-	const shadowRootTemplate = definitionElement.querySelector('template');
 	if (shadowRootTemplate) {
 		const shadowRootPlaceholder = document.createElement('template');
 
