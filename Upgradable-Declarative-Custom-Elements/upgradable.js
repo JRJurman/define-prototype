@@ -42,6 +42,11 @@ class HTMLDefinitionElement extends HTMLElement {
 customElements.define('proto-definition', HTMLDefinitionElement);
 
 async function defineNewElement(shadowRootTemplate) {
+	// check if this element has already been defined
+	if (shadowRootTemplate.__defined) {
+		return undefined;
+	}
+
 	// get the name for this new element
 	const name = shadowRootTemplate.getAttribute('tagname');
 
@@ -59,6 +64,7 @@ async function defineNewElement(shadowRootTemplate) {
 	}
 
 	customElements.define(name, componentClass);
+	shadowRootTemplate.__defined = true;
 }
 
 // below are mutation observers and event listeners to detect the definitions in the document
