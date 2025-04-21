@@ -1,9 +1,4 @@
 {
-	"name": "define-prototype",
-	"private": true,
-	"version": "0.1.0",
-	"description": "Proposal for HTMLDefineElement",
-	"main": "define-prototype.js",
 	"scripts": {
 		"test": "playwright test --ui -c test/playwright.config.js",
 		"test:ci": "playwright test"
@@ -12,13 +7,6 @@
 		"type": "git",
 		"url": "git+https://github.com/JRJurman/define-prototype.git"
 	},
-	"keywords": [
-		"web-component",
-		"html",
-		"declarative",
-		"dce",
-		"custom elements"
-	],
 	"author": {
 		"name": "Jesse Jurman",
 		"email": "j.r.jurman@gmail.com",

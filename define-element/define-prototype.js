@@ -67,7 +67,7 @@ async function defineNewElement(definitionElement) {
 
 // below are mutation observers and event listeners to detect the Define element in the document
 const defineElementObserver = new MutationObserver((mutationList) => {
-	for (const mutation in mutationList) {
+	for (const mutation of mutationList) {
 		for (const newNode of mutation?.addedNodes || []) {
 			// we actually are looking for when we've just-passed the define element,
 			// otherwise we might catch it before its children have been added to the document

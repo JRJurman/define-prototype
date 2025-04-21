@@ -1,0 +1,56 @@
+<proto-definition name="my-title" id="myTitleComponent">
+	<proto-shadowrootoptions shadowrootmode="open"></proto-shadowrootoptions>
+	<template>
+		<style>
+			:host {
+				display: block;
+			}
+		</style>
+		<span>Title: <slot></slot></span>
+	</template>
+	<script>
+		export default class extends HTMLElement {
+			connectedCallback() {
+				this.addEventListener('click', () => {
+					this.style.fontWeight = 'bold';
+				});
+			}
+		}
+	</script>
+</proto-definition>
+
+<my-title>My First Web Component</my-title>
+
+<proto-definition name="underlined-title">
+	<proto-shadowrootoptions shadowrootmode="open"></proto-shadowrootoptions>
+	<template>
+		<style>
+			:host {
+				display: block;
+				text-decoration: underline;
+			}
+		</style>
+		<span>Title: <slot></slot></span>
+	</template>
+	<script>
+		export default class extends myTitleComponent.elementConstructor {}
+	</script>
+</proto-definition>
+
+<underlined-title>Overriding Styles</underlined-title>
+
+<proto-definition name="strikable-title">
+	<script>
+		export default class extends myTitleComponent.elementConstructor {
+			connectedCallback() {
+				this.addEventListener('click', () => {
+					this.style.textDecoration = 'line-through';
+				});
+			}
+		}
+	</script>
+</proto-definition>
+
+<strikable-title>Overriding Behavior</strikable-title>
+
+<script src="../HTMLDefinitionElement.js"></script>

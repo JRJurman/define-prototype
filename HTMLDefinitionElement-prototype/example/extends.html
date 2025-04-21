@@ -1,0 +1,50 @@
+<proto-definition name="web-citation">
+	<proto-shadowrootoptions shadowrootmode="open"></proto-shadowrootoptions>
+	<template>
+		<style>
+			:host {
+				display: block;
+			}
+			#container {
+				display: grid;
+				grid-template-columns: 2em auto;
+			}
+			slot[name='published-source'] {
+				font-style: italic;
+			}
+		</style>
+
+		<div id="container">
+			<div>[<slot name="reference-no"></slot>]</div>
+			<div>
+				<slot name="authors"></slot>, "<slot name="title"></slot>",
+				<slot name="published-source"></slot>
+			</div>
+		</div>
+	</template>
+	<script type="module">
+		export default class extends HTMLElement {
+			connectedCallback() {
+				this.addEventListener('click', () => {
+					this.style.backgroundColor = 'yellow';
+				});
+			}
+		}
+	</script>
+</proto-definition>
+
+<web-citation>
+	<span slot="reference-no">1</span>
+	<span slot="authors">J. Jurman</span>
+	<span slot="title">Proposal For Declarative Shadow DOM driven definitions</span>
+	<span slot="published-source">Github</span>
+</web-citation>
+
+<web-citation>
+	<span slot="reference-no">2</span>
+	<span slot="authors">J. Pea</span>
+	<span slot="title">HTML Includes</span>
+	<span slot="published-source">Github</span>
+</web-citation>
+
+<script src="../HTMLDefinitionElement.js"></script>
