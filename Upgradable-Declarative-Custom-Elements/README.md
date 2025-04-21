@@ -12,6 +12,7 @@ upgraded again with JS functionality.
 ## Example
 
 You can see the following example live here:
+https://jrjurman.com/define-prototype/Upgradable-Declarative-Custom-Elements/example/basic.html
 
 ```html
 <!-- first, build a component definition with a shadow root template -->
