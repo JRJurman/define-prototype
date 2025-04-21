@@ -1,9 +1,21 @@
+// utility function to patch classes
+function patchClass(target, source) {
+	const protoDescriptors = Object.getOwnPropertyDescriptors(source.prototype);
+	delete protoDescriptors.constructor;
+	Object.defineProperties(target.prototype, protoDescriptors);
+
+	const staticDescriptors = Object.getOwnPropertyDescriptors(source);
+	delete staticDescriptors.prototype;
+	delete staticDescriptors.name;
+	delete staticDescriptors.length;
+	Object.defineProperties(target, staticDescriptors);
+}
+
+// custom function to upgrade an existing tag definition with new behavior
 customElements.upgradeClass = (tagName, classDefinition) => {
 	const originalClass = customElements.get(tagName);
 
-	const instanceDescs = Object.getOwnPropertyDescriptors(classDefinition.prototype);
-	delete instanceDescs.constructor;
-	Object.defineProperties(originalClass.prototype, instanceDescs);
+	patchClass(originalClass, classDefinition);
 
 	const existingElements = document.querySelectorAll(tagName);
 	[...existingElements].forEach((element) => {
@@ -11,6 +23,8 @@ customElements.upgradeClass = (tagName, classDefinition) => {
 	});
 };
 
+// base class to use for our first pass implementation of components
+// with shadow root templates.
 class HTMLDeclarativeElement extends HTMLElement {
 	constructor() {
 		super();
@@ -33,15 +47,28 @@ class HTMLDeclarativeElement extends HTMLElement {
 			shadowRootRange.selectNodeContents(shadowRoot);
 			this.shadowRoot.append(shadowRootRange.cloneContents());
 		}
+
+		this.originalConnectedCallbackCalled = false;
+	}
+	connectedCallback() {
+		if (!this.originalConnectedCallbackCalled) {
+			this.originalConnectedCallbackCalled = true;
+
+			// if this element has been patched, this.connectedCallback will be different from this method
+			this.connectedCallback();
+		}
 	}
 }
 
+// if we need a wrapper for our templates (to ensure the templates stay as inert templates)
+// we can use a `<proto-definition>` element to wrap it
 class HTMLDefinitionElement extends HTMLElement {
 	static disabledFeatures = ['shadow'];
 }
 customElements.define('proto-definition', HTMLDefinitionElement);
 
-async function defineNewElement(shadowRootTemplate) {
+// function to take a template with a tag name and build a first-pass component class and register it
+function defineNewElement(shadowRootTemplate) {
 	// check if this element has already been defined
 	if (shadowRootTemplate.__defined) {
 		return undefined;
