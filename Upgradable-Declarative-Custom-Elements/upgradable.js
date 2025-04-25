@@ -1,22 +1,20 @@
-// utility function to patch classes
-function patchClass(target, source) {
-	const protoDescriptors = Object.getOwnPropertyDescriptors(source.prototype);
-	delete protoDescriptors.constructor;
-	Object.defineProperties(target.prototype, protoDescriptors);
+// custom function to upgrade an existing tag definition with new behavior
+customElements.upgrade = (tagName, classDefinition) => {
+	// pull the original class definition from the registry
+	const originalClass = customElements.get(tagName);
 
-	const staticDescriptors = Object.getOwnPropertyDescriptors(source);
+	// upgrade the original class definition
+	const protoDescriptors = Object.getOwnPropertyDescriptors(classDefinition.prototype);
+	delete protoDescriptors.constructor;
+	Object.defineProperties(originalClass.prototype, protoDescriptors);
+
+	const staticDescriptors = Object.getOwnPropertyDescriptors(classDefinition);
 	delete staticDescriptors.prototype;
 	delete staticDescriptors.name;
 	delete staticDescriptors.length;
-	Object.defineProperties(target, staticDescriptors);
-}
+	Object.defineProperties(originalClass, staticDescriptors);
 
-// custom function to upgrade an existing tag definition with new behavior
-customElements.upgradeClass = (tagName, classDefinition) => {
-	const originalClass = customElements.get(tagName);
-
-	patchClass(originalClass, classDefinition);
-
+	// find any elements that already exist in the DOM and upgrade them
 	const existingElements = document.querySelectorAll(tagName);
 	[...existingElements].forEach((element) => {
 		element.connectedCallback();
@@ -60,10 +58,28 @@ class HTMLDeclarativeElement extends HTMLElement {
 	}
 }
 
-// if we need a wrapper for our templates (to ensure the templates stay as inert templates)
-// we can use a `<proto-definition>` element to wrap it
+// wrapper that translates templates into component definitions
 class HTMLDefinitionElement extends HTMLElement {
 	static disabledFeatures = ['shadow'];
+	connectedCallback() {
+		// below are mutation observers and event listeners to detect the definitions in the document
+		const defineElementObserver = new MutationObserver((mutationList) => {
+			for (const mutation of mutationList) {
+				for (const newNode of mutation?.addedNodes || []) {
+					// we actually are looking for when we've just-passed the definitions,
+					// otherwise we might catch it before its content has been added to the document
+					const previousNode = newNode.previousElementSibling;
+					if (previousNode && previousNode.tagName === 'TEMPLATE' && previousNode.hasAttribute('tagname')) {
+						defineNewElement(previousNode);
+					}
+				}
+			}
+		});
+		defineElementObserver.observe(document.documentElement, { childList: true, subtree: true });
+	}
+	disconnectedCallback() {
+		defineElementObserver.disconnect();
+	}
 }
 customElements.define('proto-definition', HTMLDefinitionElement);
 
@@ -93,18 +109,3 @@ function defineNewElement(shadowRootTemplate) {
 	customElements.define(name, componentClass);
 	shadowRootTemplate.__defined = true;
 }
-
-// below are mutation observers and event listeners to detect the definitions in the document
-const defineElementObserver = new MutationObserver((mutationList) => {
-	for (const mutation of mutationList) {
-		for (const newNode of mutation?.addedNodes || []) {
-			// we actually are looking for when we've just-passed the definitions,
-			// otherwise we might catch it before its content has been added to the document
-			const previousNode = newNode.previousElementSibling;
-			if (previousNode && previousNode.tagName === 'TEMPLATE' && previousNode.hasAttribute('tagname')) {
-				defineNewElement(previousNode);
-			}
-		}
-	}
-});
-defineElementObserver.observe(document.documentElement, { childList: true, subtree: true });
