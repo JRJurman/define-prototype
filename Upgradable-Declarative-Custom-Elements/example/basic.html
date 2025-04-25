@@ -1,18 +1,20 @@
 <script src="../upgradable.js"></script>
 
-<template tagname="highlightable-title" shadowrootmode="open">
-	<style>
-		:host {
-			display: block;
-		}
-	</style>
-	<h1>Hello <slot></slot></h1>
-</template>
+<proto-definition>
+	<template tagname="highlightable-title" shadowrootmode="open">
+		<style>
+			:host {
+				display: block;
+			}
+		</style>
+		<h1>Hello <slot></slot></h1>
+	</template>
+</proto-definition>
 
 <highlightable-title>World</highlightable-title>
 
 <script>
-	customElements.upgradeClass(
+	customElements.upgrade(
 		'highlightable-title',
 		class {
 			connectedCallback() {
