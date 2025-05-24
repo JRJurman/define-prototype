@@ -11,16 +11,14 @@ https://jrjurman.com/define-prototype/shadowroot-injector/example/basic.html
 
 ```html
 <!-- first, build a component definition with a shadow root template -->
-<shadowroot-injector tagname="highlightable-title">
-  <template shadowrootmode="open">
-    <style>
-      :host {
-        display: block;
-      }
-    </style>
-    <h1>Hello <slot></slot></h1>
-  </template>
-</shadowroot-injector>
+<template sri-tagname="highlightable-title" sri-mode="open">
+  <style>
+    :host {
+      display: block;
+    }
+  </style>
+  <h1>Hello <slot></slot></h1>
+</template>
 
 <!-- second, have instances of the component -->
 <highlightable-title>World</highlightable-title>
@@ -29,7 +27,7 @@ https://jrjurman.com/define-prototype/shadowroot-injector/example/basic.html
 <script>
   customElements.define(
     'highlightable-title',
-    class {
+    class extends HTMLElement {
       connectedCallback() {
         this.shadowRoot.querySelector('h1').addEventListener('click', () => {
           this.style.background = 'yellow';
