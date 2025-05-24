@@ -20,7 +20,7 @@ const shadowrootInjectorWatcher = new MutationObserver((mutationList) => {
 	for (const mutation of mutationList) {
 		for (const newNode of mutation?.addedNodes || []) {
 			// if this element is one that we've registered a shadow root for, attach it
-			const newNodeTagName = newNode.tagName?.toUpperCase();
+			const newNodeTagName = newNode.tagName;
 			if (shadowRootInjectorElementMap.has(newNodeTagName)) {
 				const newNodeTemplate = shadowRootInjectorElementMap.get(newNodeTagName);
 				injectShadowRoot(newNode, newNodeTemplate);
