@@ -9,14 +9,10 @@ const injectShadowRoot = (node, template) => {
 
 	// attach a new shadow to this element using the properties of the shadowroot object that was created
 	node.attachShadow(shadowRoot);
-
-	// clone the shadow root content using a document range
-	const shadowRootRange = document.createRange();
-	shadowRootRange.selectNodeContents(shadowRoot);
-	node.shadowRoot.append(shadowRootRange.cloneContents());
+	node.shadowRoot.append(template.content.cloneNode(true));
 };
 
-const shadowRootInjectorElementMap = {};
+const shadowRootInjectorElementMap = new Map();
 
 // Mutation Observer to look for Templates with sri-mode,
 // these are templates that we want to copy over to new elements
@@ -25,8 +21,8 @@ const shadowrootInjectorWatcher = new MutationObserver((mutationList) => {
 		for (const newNode of mutation?.addedNodes || []) {
 			// if this element is one that we've registered a shadow root for, attach it
 			const newNodeTagName = newNode.tagName?.toUpperCase();
-			const newNodeTemplate = shadowRootInjectorElementMap[newNodeTagName];
-			if (newNodeTemplate) {
+			if (shadowRootInjectorElementMap.has(newNodeTagName)) {
+				const newNodeTemplate = shadowRootInjectorElementMap.get(newNodeTagName);
 				injectShadowRoot(newNode, newNodeTemplate);
 			}
 
@@ -36,7 +32,7 @@ const shadowrootInjectorWatcher = new MutationObserver((mutationList) => {
 			if (previousNode && previousNode.tagName === 'TEMPLATE' && previousNode.hasAttribute('sri-mode')) {
 				const tagName = previousNode.getAttribute('sri-tagname');
 				previousNode.setAttribute('shadowrootmode', previousNode.getAttribute('sri-mode'));
-				shadowRootInjectorElementMap[tagName.toUpperCase()] = previousNode;
+				shadowRootInjectorElementMap.set(tagName.toUpperCase(), previousNode);
 			}
 		}
 	}
