@@ -10,7 +10,7 @@ You can see the following example live here:
 https://jrjurman.com/define-prototype/shadowroot-injector/example/basic.html
 
 ```html
-<!-- first, build a component definition with a shadow root template -->
+<!-- first, build a template that will be picked up by the ShadowRoot Injector -->
 <template sri-tagname="highlightable-title" sri-mode="open">
   <style>
     :host {
@@ -29,7 +29,7 @@ https://jrjurman.com/define-prototype/shadowroot-injector/example/basic.html
     'highlightable-title',
     class extends HTMLElement {
       connectedCallback() {
-        this.shadowRoot.querySelector('h1').addEventListener('click', () => {
+        this.addEventListener('click', () => {
           this.style.background = 'yellow';
         });
       }
