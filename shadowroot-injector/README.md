@@ -11,7 +11,7 @@ https://jrjurman.com/define-prototype/shadowroot-injector/example/basic.html
 
 ```html
 <!-- first, build a template that will be picked up by the ShadowRoot Injector -->
-<template sri-tagname="highlightable-title" sri-mode="open">
+<template sr-tagname="highlightable-title" sr-mode="open">
   <style>
     :host {
       display: block;

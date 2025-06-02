@@ -30,12 +30,12 @@ class ShadowRootInjector {
 
 	/** function that registers a template to be used later with custom elements */
 	registerTemplateDefinition(template) {
-		const tagName = template.getAttribute('sri-tagname');
+		const tagName = template.getAttribute('sr-tagname');
 		// to be able to actually attach a shadowroot, we'll clone and set the shadowroot mode
 		const shadowRootTemplate = template.cloneNode(true);
-		shadowRootTemplate.setAttribute('shadowrootmode', template.getAttribute('sri-mode'));
-		shadowRootTemplate.removeAttribute('sri-tagname');
-		shadowRootTemplate.removeAttribute('sri-mode');
+		shadowRootTemplate.setAttribute('shadowrootmode', template.getAttribute('sr-mode'));
+		shadowRootTemplate.removeAttribute('sr-tagname');
+		shadowRootTemplate.removeAttribute('sr-mode');
 		this.shadowRootInjectorElementMap.set(tagName.toUpperCase(), shadowRootTemplate);
 	}
 
@@ -46,7 +46,7 @@ class ShadowRootInjector {
 				// if this is the element AFTER an injectable template, register that template for future elements
 				// (this will almost always be a TEXT node, even if the next actual element would be an element)
 				const previousNode = newNode.previousSibling;
-				if (previousNode && previousNode.tagName === 'TEMPLATE' && previousNode.hasAttribute('sri-mode')) {
+				if (previousNode && previousNode.tagName === 'TEMPLATE' && previousNode.hasAttribute('sr-mode')) {
 					this.registerTemplateDefinition(previousNode);
 				}
 			}
@@ -81,7 +81,7 @@ class ShadowRootInjector {
 
 // check if the script tag has a `autostart` attribute (this indicates we should build and start the injector),
 // otherwise we'll defer to the user to do this in their own script
-if (document.currentScript.hasAttribute('autostart')) {
+if (document.currentScript.hasAttribute('sr-autostart')) {
 	window.shadowRootInjector = new ShadowRootInjector();
 	window.shadowRootInjector.start();
 }
