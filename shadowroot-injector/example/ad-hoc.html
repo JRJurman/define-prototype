@@ -1,6 +1,5 @@
-<script src="../shadowroot-injector.js"></script>
+<script src="../shadowroot-injector.js" autostart></script>
 
-<!-- first, build a component definition with a shadow root template -->
 <template sri-tagname="highlightable-title" sri-mode="open">
 	<style>
 		:host {
@@ -10,10 +9,8 @@
 	<h1>Hello <slot></slot></h1>
 </template>
 
-<!-- second, have instances of the component -->
 <highlightable-title>World</highlightable-title>
 
-<!-- third, upgrade the component with dynamic behavior -->
 <script>
 	customElements.define(
 		'highlightable-title',

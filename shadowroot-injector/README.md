@@ -2,7 +2,7 @@
 
 The idea of this example is to demonstrate how we might incrementally introduce a declarative interface for stamp-able
 templates by creating an initial shadow root that is automatically inserted into elements using a mutation observer.
-Users can afterwards upgrade the element to a proper custom element using the existing class definition.
+Users can afterwards upgrade the element to a proper custom element using a web-component definition.
 
 ## Example
 
@@ -20,7 +20,7 @@ https://jrjurman.com/define-prototype/shadowroot-injector/example/basic.html
   <h1>Hello <slot></slot></h1>
 </template>
 
-<!-- second, have instances of the component -->
+<!-- second, have instances of the component (we will automatically insert a shadow root) -->
 <highlightable-title>World</highlightable-title>
 
 <!-- third, upgrade the component with dynamic behavior -->
